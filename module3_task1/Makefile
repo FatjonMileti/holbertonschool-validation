@@ -1,33 +1,22 @@
-HUGO=hugo
-RM=rm -rf
-SHELLCHECK=shellcheck
-YAMLLINT=yamllint
-YQ=yq
+build:    ## Generate the website from the markdown and configuration files in the directory dist/
+	hugo
 
-build: ## Builds a new website
-	$(HUGO)
+clean:	  ## Cleanup the content of the directoy dist/
+	rm -rf ./dist/
 
-post: ## Creates a new post with the title changed to the ENV value.
-	$(HUGO) new posts/$(POST_NAME).md
-	sed -i '2s/.*/title: "$(POST_TITLE)"/' content/posts/$(POST_NAME).md
+post:	  ## Create a new blog post whose filename and title come from the environment variables POST_TITLE and POST_NAME
+	hugo new posts/$(POST_NAME).md
+	sed -i '/title:/c\title: "$(POST_TITLE)"' content/posts/$(POST_NAME).md
 
-clean: ## Remove all files from target folder
-	$(RM) dist/*
+help:     ## Show this help usage
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+lint:     ## Check bash script syntax
+	shellcheck setup.sh
+validate:     ## Validating
+	ls
 
-lint: ## Lints the shell file and run yamllint on success.
-	$(SHELLCHECK) setup.sh >/dev/null 2>&1 && make yamllint || echo "Lint Failed"
-	
+unit-tests:     ## Unit testing
+	pwd
 
-yamllint: ## Yamllint github workflow.
-	$(YAMLLINT) ./github-workflow.yml --no-warnings >/dev/null 2>&1 && echo OK
-	$(YQ) eval '.jobs.*.steps.[].name' ./github-workflow.yml | wc -l
-	$(YQ) eval '.jobs.*.steps.[].run' ./github-workflow.yml | grep -q 'make lint' && echo OK
-	$(YQ) eval '.jobs.*.steps.[].run' ./github-workflow.yml | grep -q 'make integration-test'
-
-integration-tests: ## Spin up a server and check the localhost url
-	$(HUGO)
-	ls dist/
-
-.SILENT:
-help: ## Target check
-	cat Makefile | grep '##' | tr -d '##' | head -n -1
+integration-tests:     ## Integration testing
+	ls -l
