@@ -1,22 +1,10 @@
-build:    ## Generate the website from the markdown and configuration files in the directory dist/
+build:  ## Builds a website using
 	hugo
-
-clean:	  ## Cleanup the content of the directoy dist/
-	rm -rf ./dist/
-
-post:	  ## Create a new blog post whose filename and title come from the environment variables POST_TITLE and POST_NAME
+clean:  ## Cleans content from dist directory
+	rm -rf ./dist
+post:  ## Creates a new post using env variables POST_NAME and POST_TITLE
 	hugo new posts/$(POST_NAME).md
-	sed -i '/title:/c\title: "$(POST_TITLE)"' content/posts/$(POST_NAME).md
+	sed -i 's/title: .*/title: "$(POST_TITLE)"/g' ./content/posts/$(POST_NAME).md
 
-help:     ## Show this help usage
+help:  ## Show this help usage
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
-lint:     ## Check bash script syntax
-	shellcheck setup.sh
-validate:     ## Validating
-	ls
-
-unit-tests:     ## Unit testing
-	pwd
-
-integration-tests:     ## Integration testing
-	ls -l
