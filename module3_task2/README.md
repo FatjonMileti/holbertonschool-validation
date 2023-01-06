@@ -13,3 +13,8 @@ DevOps introduction
 
 ## Workflow
 - Test code daily and on push
+
+## Build Workflow
+
+- Build Workflow
+

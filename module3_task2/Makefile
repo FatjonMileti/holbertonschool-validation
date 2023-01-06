@@ -8,3 +8,7 @@ post:  ## Creates a new post using env variables POST_NAME and POST_TITLE
 
 help:  ## Show this help usage
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+
+package: ## Creates a zip file
+	make build
+	zip awesome-website.zip dist/index.html
