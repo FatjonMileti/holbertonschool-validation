@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
-      - name: module3_task1
+      - name: module3
         run: cd module3_task1 && sudo ./setup.sh
       - name: Make build
         run: make build -C module3_task1
